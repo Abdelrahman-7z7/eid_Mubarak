@@ -950,11 +950,11 @@
             <!-- BUTTONS -->
             <div class="buttons-area" id="buttonsArea">
                 <button class="btn-yes" id="btnYes" onclick="handleYes()">
-                    أيه وكمان 💜✨
+                    أيه 💜✨
                 </button>
                 <div class="btn-no-wrap" id="btnNoWrap">
                     <button class="btn-no" id="btnNo" onclick="handleNo()">
-                        لأ 😒
+                        لأ زعلانه 😒
                     </button>
                 </div>
             </div>
@@ -996,24 +996,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         /* ========================================================
-           GLOBALS
+           GLOBALS & CONTENT LOADING
         ======================================================== */
         let yesClickedOnce = false;
-        let redClickedAtLeastOnce = false; // track if red was ever pressed
+        let redClickedAtLeastOnce = false;
         let noClickCount = 0;
-        let greenSizePct = 80; // % width of green button
-        let redSizePx = Math.min(260, window.innerWidth * 0.68); // px width of red button
+        let greenSizePct = 80;
+        let redSizePx = Math.min(260, window.innerWidth * 0.68);
 
-        const noMessages = [
-            { emoji: "😯", title: "هاه؟!", msg: "بكيت قلمي لما شفت ردك... جربي مرة ثانية؟ 🥺", btn: "بس..." },
-            { emoji: "🤔", title: "متأكدة؟", msg: "أعتقد أصابعك ضغطت غلط والله... المسافة بين الزرين صغيرة! 😅", btn: "ممكن..." },
-            { emoji: "😤", title: "لا لا لا!", msg: "هاد الزر مو للضغط! الزر التاني أحسن منو بكتير 💜", btn: "هيم..." },
-            { emoji: "🙄", title: "يي!", msg: "توقفي شوي... بتحسسيني إني بتكلم مع الهاتف مو معك 😂", btn: "اوف..." },
-            { emoji: "😭", title: "قلبي!!", msg: "كل ما ضغطتي لأ... كتلة صغيرة من قلبي بتموت 💔 جربي الثاني!", btn: "يلا..." },
-            { emoji: "🌸", title: "تفكري!", msg: "الزر الأخضر أحلى لوناً وأحلى معنى... صح؟ 💚", btn: "صح!" },
-            { emoji: "🤯", title: "مو معقول", msg: "ضغطتي لأ؟! مرة ثانية؟! شو بدك تعمل بقلبي بس!!! 😩", btn: "يلا تمم" },
-            { emoji: "😇", title: "بالله عليكِ", msg: "الله يحفظك... ضغطي الأخضر ومرتاحين 😂💜", btn: "حسناً حسناً!" },
-        ];
+        let config = {};
+        let noMessages = [];
+        let redTexts = [];
+
+        async function loadContent() {
+            try {
+                const response = await fetch('./content.json');
+                config = await response.json();
+                
+                // Update basic text
+                document.title = config.title;
+                document.getElementById('skipBtn').textContent = config.intro.skipBtn;
+                document.getElementById('scrollHint').querySelector('span').textContent = config.main.scrollHint;
+                document.getElementById('eidSubtitle').textContent = config.main.eidSubtitle;
+                document.querySelector('#msgCard .msg-text').innerHTML = config.main.msgCard;
+                document.querySelector('#questionCard .question-label').textContent = config.main.questionLabel;
+                document.querySelector('#questionCard .question-text').innerHTML = config.main.questionText;
+                document.getElementById('btnYes').textContent = config.main.btnYes;
+                document.getElementById('btnNo').textContent = config.main.btnNo;
+                
+                // Update final screen
+                document.getElementById('finaleTitle').textContent = config.finale.title;
+                document.getElementById('finaleSub').innerHTML = config.finale.sub;
+                document.getElementById('resetBtn').textContent = config.finale.resetBtn;
+
+                // Set arrays
+                noMessages = config.noMessages;
+                redTexts = config.redTexts;
+
+                // Start intro after content is ready
+                requestAnimationFrame(animateIntro);
+            } catch (err) {
+                console.error("Failed to load content.json:", err);
+                // Fallback to manual start if fetch fails
+                requestAnimationFrame(animateIntro);
+            }
+        }
 
         /* ========================================================
            INTRO — Three.js Flower Garden
@@ -1258,8 +1285,8 @@
 
             renderer.render(scene, camera);
         }
-
-        requestAnimationFrame(animateIntro);
+        
+        loadContent();
 
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
@@ -1408,10 +1435,10 @@
             if (!redClickedAtLeastOnce && !yesClickedOnce) {
                 yesClickedOnce = true;
                 showPopup({
-                    emoji: '😏',
-                    title: 'لحظة!',
-                    msg: 'قبل ما تضغطي الأخضر... جربي الأحمر أول 😈 بس للتسلية!',
-                    btn: 'حسناً!'
+                    emoji: config.popup.teaserEmoji || '😏',
+                    title: config.popup.teaserTitle,
+                    msg: config.popup.teaserMsg,
+                    btn: config.popup.teaserBtn
                 });
                 return;
             }
