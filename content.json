@@ -7,7 +7,7 @@
     "scrollHint": "اسحبي للأسفل",
     "eidTitleText": "عيد مبارك",
     "eidSubtitle": "بمناسبة عيد الفطر المبارك",
-    "msgCard": "كل سنة وانتي طيبة يا <span class=\"name-highlight\">شوشو</span> <br> <span class=\"flower-inline\">🌸</span> <br> وتكوني في حياتي على طول <br><br> يلا رب يجعل هالعيد بداية كل الأوقات الحلوة 🌙✨",
+    "msgCard": "كل سنة وانتي طيبة يا <span class=\"name-highlight\">شوشو</span> <br> <span class=\"flower-inline\">🌸</span> <br> وتكوني في حياتي على طول <br><br> يا رب يجعل هالعيد بداية كل الأوقات الحلوة 🌙✨",
     "questionLabel": "🌸 سؤال من القلب 🌸",
     "questionText": "بدك اياني <br> بدون تفكير كتير 😂؟ <br> <span class=\"question-heart\">💜</span>",
     "btnYes": "أيه 💜✨",
@@ -64,7 +64,7 @@
     }
   ],
   "redTexts": [
-    "لأ 😒",
+    "لأ زعلانه 😒",
     "بعدني لأ 🙄",
     "مو رح أضغط!",
     "ما رح أغير رأيي!!",
